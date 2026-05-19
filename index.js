@@ -1,15 +1,20 @@
+const dns = require("node:dns");
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
+
 const express = require('express')
 const dotenv= require("dotenv")
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 dotenv.config()
 const cors = require("cors")
 const app = express()
 app.use(cors());
+app.use(express.json());
 const port = process.env.PORT || 8080;
 
 
 
-const uri = "mongodb+srv://DocAppoint:Ig0BoE5PgPs50s7Q@cluster0.juzkrke.mongodb.net/?appName=Cluster0";
+const uri = process.env.MONGODB_URI;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -22,16 +27,28 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
+   
     await client.connect();
-    // Send a ping to confirm a successful connection
-    // await client.db("admin").command({ ping: 1 });
+  
 
     const db = client.db("docappointdb");
     const doctorsCollection = db.collection("doctors");
 
      app.get('/doctor',async(req,res)=>{
       const result =await doctorsCollection.find().toArray()
+      res.json(result)
+    })
+
+    app.post('/doctor',async(req,res)=>{
+        const doctorData = req.body
+        console.log(doctorData)
+       const result=await doctorsCollection.insertOne(doctorData)
+       res.json(result)
+    })
+     app.get('/doctor/:id',async(req,res)=>{
+      const {id}=req.params
+
+      const result = await doctorsCollection.findOne({_id:new ObjectId(id)})
       res.json(result)
     })
 
