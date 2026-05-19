@@ -33,6 +33,11 @@ async function run() {
 
     const db = client.db("docappointdb");
     const doctorsCollection = db.collection("doctors");
+    const bookingCollection = db.collection("bookings");
+
+
+
+
 
      app.get('/doctor',async(req,res)=>{
       const result =await doctorsCollection.find().toArray()
@@ -49,6 +54,18 @@ async function run() {
       const {id}=req.params
 
       const result = await doctorsCollection.findOne({_id:new ObjectId(id)})
+      res.json(result)
+    })
+
+    app.get("/booking/:userId",async(req,res)=>{
+      const {userId}=req.params
+      const result = await bookingCollection.find({userId:userId}).toArray()
+      res.json(result)
+    })
+
+    app.post('/booking',async(req,res)=>{
+      const bookingData = req.body;
+      const result = await bookingCollection.insertOne(bookingData)
       res.json(result)
     })
 
