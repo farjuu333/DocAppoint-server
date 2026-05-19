@@ -25,6 +25,18 @@ const client = new MongoClient(uri, {
   }
 });
 
+
+const verifyToken = async(req,res,next)=>{
+  const authHeader = req?.headers.authorization;
+  if(!authHeader){
+    return res.status(401).json({message : "Unauthorized"});
+  }
+  const token = authHeader.split(" ")[1]
+  if(!token){
+    return res.status(401).json({message : "Unauthorized"});
+  }
+}
+
 async function run() {
   try {
    
@@ -50,7 +62,7 @@ async function run() {
        const result=await doctorsCollection.insertOne(doctorData)
        res.json(result)
     })
-     app.get('/doctor/:id',async(req,res)=>{
+     app.get('/doctor/:id',verifyToken,async(req,res)=>{
       const {id}=req.params
 
       const result = await doctorsCollection.findOne({_id:new ObjectId(id)})
