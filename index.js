@@ -7,7 +7,7 @@ const dotenv= require("dotenv")
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 dotenv.config()
 const cors = require("cors");
-const { createRemoteJWKSet } = require("jose-cjs");
+const { createRemoteJWKSet, jwtVerify } = require("jose-cjs");
 const app = express()
 app.use(cors());
 app.use(express.json());
@@ -26,7 +26,7 @@ const client = new MongoClient(uri, {
   }
 });
 const JWKS = createRemoteJWKSet(
-new URL(new URL(`${process.env.CLIENT_URL}/api/auth/jwks`))
+new URL(`${process.env.CLIENT_URL}/api/auth/jwks`)
 )
 
 
@@ -83,19 +83,19 @@ async function run() {
       res.json(result)
     })
 
-    app.get("/booking/:userId",async(req,res)=>{
+    app.get("/booking/:userId",verifyToken,async(req,res)=>{
       const {userId}=req.params
       const result = await bookingCollection.find({userId:userId}).toArray()
       res.json(result)
     })
 
-    app.post('/booking',async(req,res)=>{
+    app.post('/booking',verifyToken,async(req,res)=>{
       const bookingData = req.body;
       const result = await bookingCollection.insertOne(bookingData)
       res.json(result)
     }) 
 
-    app.patch('/booking/:bookingId',async(req,res)=>{
+    app.patch('/booking/:bookingId',verifyToken,async(req,res)=>{
       const {bookingId}=req.params
       const updateData = req.body
       console.log(updateData)
@@ -107,7 +107,7 @@ async function run() {
     })
     
 
-    app.delete('/booking/:bookingId',async(req,res)=>{
+    app.delete('/booking/:bookingId',verifyToken,async(req,res)=>{
       const {bookingId}= req.params
       const result = await bookingCollection.deleteOne({ _id:new ObjectId(bookingId)})
       res.json(result)
