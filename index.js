@@ -67,6 +67,24 @@ async function run() {
       const bookingData = req.body;
       const result = await bookingCollection.insertOne(bookingData)
       res.json(result)
+    }) 
+
+    app.patch('/booking/:bookingId',async(req,res)=>{
+      const {bookingId}=req.params
+      const updateData = req.body
+      console.log(updateData)
+      const result =await bookingCollection.updateOne(
+        {_id:new ObjectId(bookingId)},
+        {$set:updateData}
+      )
+      res.json(result)
+    })
+    
+
+    app.delete('/booking/:bookingId',async(req,res)=>{
+      const {bookingId}= req.params
+      const result = await bookingCollection.deleteOne({ _id:new ObjectId(bookingId)})
+      res.json(result)
     })
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
