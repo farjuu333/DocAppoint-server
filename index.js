@@ -70,6 +70,17 @@ async function run() {
       res.json(result)
     })
 
+    
+    app.get('/top-doctors', async (req, res) => {
+      try {
+    
+        const result = await doctorsCollection.find().sort({ rating: -1 }).limit(3).toArray();
+         res.json(result);
+      } catch (error) {
+          res.status(403).json({ message: "Internal Server Error" });
+  }
+});
+
     app.post('/doctor',async(req,res)=>{
         const doctorData = req.body
         console.log(doctorData)
@@ -127,5 +138,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`server running on port ${port}`)
 })
