@@ -65,10 +65,29 @@ async function run() {
 
 
 
-     app.get('/doctor',async(req,res)=>{
-      const result =await doctorsCollection.find().toArray()
-      res.json(result)
-    })
+    //  app.get('/doctor',async(req,res)=>{
+    //   const result =await doctorsCollection.find().toArray()
+    //   res.json(result)
+    // })
+
+app.get('/doctor', async (req, res) => {
+  try {
+    const { search } = req.query;
+    let query = {};
+
+    
+    if (search) {
+      query = {
+        name: { $regex: search, $options: "i" } 
+      };
+    }
+
+    const result = await doctorsCollection.find(query).toArray();
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error });
+  }
+});
 
     
     app.get('/top-doctors', async (req, res) => {
