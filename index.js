@@ -54,7 +54,7 @@ const verifyToken = async(req,res,next)=>{
 async function run() {
   try {
    
-    await client.connect();
+    // await client.connect();
   
 
     const db = client.db("docappointdb");
@@ -65,10 +65,10 @@ async function run() {
 
 
 
-    //  app.get('/doctor',async(req,res)=>{
-    //   const result =await doctorsCollection.find().toArray()
-    //   res.json(result)
-    // })
+     app.get('/doctor',async(req,res)=>{
+      const result =await doctorsCollection.find().toArray()
+      res.json(result)
+    })
 
 app.get('/doctor', async (req, res) => {
   try {
@@ -142,7 +142,7 @@ app.get('/doctor', async (req, res) => {
       const result = await bookingCollection.deleteOne({ _id:new ObjectId(bookingId)})
       res.json(result)
     })
-
+// await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
