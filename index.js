@@ -72,10 +72,9 @@ async function run() {
 
 app.get('/doctor', async (req, res) => {
   try {
-    const { search } = req.query;
+    // const { search } = req.query;
+    const search = req.query.search || req.query.Search || "";
     let query = {};
-
-    
     if (search) {
       query = {
         name: { $regex: search, $options: "i" } 
