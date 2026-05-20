@@ -65,10 +65,10 @@ async function run() {
 
 
 
-     app.get('/doctor',async(req,res)=>{
-      const result =await doctorsCollection.find().toArray()
-      res.json(result)
-    })
+    //  app.get('/doctor',async(req,res)=>{
+    //   const result =await doctorsCollection.find().toArray()
+    //   res.json(result)
+    // })
 
 app.get('/doctor', async (req, res) => {
   try {
