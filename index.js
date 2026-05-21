@@ -60,11 +60,7 @@ async function run() {
     const db = client.db("docappointdb");
     const doctorsCollection = db.collection("doctors");
     const bookingCollection = db.collection("bookings");
-
-
-
-
-
+    
     //  app.get('/doctor',async(req,res)=>{
     //   const result =await doctorsCollection.find().toArray()
     //   res.json(result)
